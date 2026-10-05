@@ -1,0 +1,40 @@
+# Soldier Front Legacy server in a container (README.txt, 6: A container).
+#
+#   podman build -t legacysf-server -f Containerfile .        (docker build works the same)
+#   podman run --rm -v sf-state:/srv/state legacysf-server --register CODE
+#   podman run -d --name sf -p 27240:27240/udp -v sf-state:/srv/state legacysf-server
+#
+# The image holds the program, its tools and the game data, read-only. Everything the server
+# writes -- server.cfg, server.key, channels.cfg, staff.cfg, shop.cfg, accounts/, packs/ and their
+# sources, recordings/, logs/ -- is in the volume at /srv/state. Keep the volume: server.key in it
+# is the server's identity.
+FROM debian:12-slim
+
+# Team Vanilla is reached over HTTPS, through the system's own libcurl and certificates.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates libcurl4 \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd --system --home /srv/state --shell /usr/sbin/nologin legacysf \
+ && mkdir -p /srv/server /srv/state \
+ && chown legacysf: /srv/state
+
+COPY --chown=root:root legacysf-server /srv/server/legacysf-server
+COPY --chown=root:root tools /srv/server/tools
+COPY --chown=root:root data /srv/server/data
+COPY --chown=root:root README.txt PACKS.txt CHANGELOG.txt /srv/server/
+RUN chmod 0755 /srv/server/legacysf-server /srv/server/tools/* \
+ && printf '%s\n' \
+    '#!/bin/sh' \
+    '# The game data stays in the image; the state folder points at it.' \
+    '[ -e /srv/state/data ] || ln -s /srv/server/data /srv/state/data' \
+    '[ -e /srv/state/tools ] || ln -s /srv/server/tools /srv/state/tools' \
+    'exec /srv/server/legacysf-server --dir /srv/state "$@"' \
+    > /srv/server/run.sh \
+ && chmod 0755 /srv/server/run.sh
+
+USER legacysf
+WORKDIR /srv/state
+VOLUME /srv/state
+EXPOSE 27240/udp
+STOPSIGNAL SIGTERM
+ENTRYPOINT ["/srv/server/run.sh"]

@@ -1,0 +1,41 @@
+# Soldier Front Legacy server as a systemd service (README.txt, 6: Linux).
+#
+#   sudo cp legacysf-server.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now legacysf-server
+#
+# The server lives in /opt/legacysf-server and runs as the user legacysf, which owns that folder
+# and nothing else. Change both lines below if yours is elsewhere.
+[Unit]
+Description=Soldier Front Legacy server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=legacysf
+Group=legacysf
+WorkingDirectory=/opt/legacysf-server
+ExecStart=/opt/legacysf-server/legacysf-server
+# SIGTERM saves and stops; give a match's report time to reach Team Vanilla.
+KillSignal=SIGTERM
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5
+# A config that is wrong is not fixed by starting again: five tries, then leave it stopped.
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+# It needs its own folder and the network, and nothing else of the machine.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/legacysf-server
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

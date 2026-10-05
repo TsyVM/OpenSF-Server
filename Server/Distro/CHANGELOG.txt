@@ -1,0 +1,29 @@
+SOLDIER FRONT LEGACY SERVER: WHAT CHANGED
+=========================================
+
+Build 1 (protocol 24, pack format 1)
+------------------------------------
+
+The first server anyone can run.
+
+  - Players sign in with their Team Vanilla account. A server never sees a password: it is shown
+    a ticket Team Vanilla signed, and checks it itself.
+  - The server list: register on the control panel, and the server appears once Team Vanilla can
+    reach it. It answers the list's own question (players, ping) directly.
+  - Rank, record, SP, Coins, base items, clans, friends and mail are universal and kept by Team
+    Vanilla. Matches here are reported there and count like anywhere else.
+  - Server roles (Owner, Admin, Game Master, Moderator), separate from SFLegacy Staff.
+  - channels.cfg and its editor in the game (F9, Channels), with the message of the day, which
+    is written back into server.cfg.
+  - games.cfg and its editor in the game (F9, Games): the server's Game Masters switch game
+    types and maps off for the whole server.
+  - The folder comes laid out: server.cfg, the original thirteen channels, an empty staff list,
+    the game's own shop. --defaults writes any of them that goes missing.
+  - The server's own shop and capsules: custom items for SP, base items at or above the official
+    price, every sale approved by the player at Team Vanilla. Duffle Bags and Team Vanilla's
+    capsules are the official server's to change; every server sells the same ones.
+  - Packs: the server's own weapons, maps and characters, built with tools/lsfpack, downloaded by
+    players on joining (50 MB together at most).
+  - server.cfg checked in full at start: the server never starts on a guess.
+  - Recordings kept 7 days.
+  - Linux: x86-64 and ARM64, a systemd unit, a container file.
