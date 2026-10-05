@@ -222,8 +222,6 @@ Made by the build: `build/`, `bin/`. Made by the server in its own folder: `serv
 | **[Download](https://sf.teamvanilla.dev/download/)** | The server for Windows and Linux, ready-made |
 | **[Control panel](https://api.teamvanilla.dev/ucp)** | Register a server and see your servers |
 | **[The server list](https://sf.teamvanilla.dev/servers/)** | Every listed server, live |
-| **[Soldier Front Legacy](https://github.com/tsyvm/soldierfrontlegacy)** | The game's own repository |
-| **[Soldier Front Legacy Discord](https://discord.gg/7cSe8s6W6T)** | Players and server owners meet here |
 | **[TeamVanilla Discord](https://discord.gg/TeJHcV9EJW)** | TeamVanilla: send the server's log with a few words on what happened |
 
 <div align="center">
